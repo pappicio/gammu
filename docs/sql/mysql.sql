@@ -131,6 +131,7 @@ CREATE TABLE `phones` (
   `Client` text NOT NULL,
   `Battery` integer NOT NULL DEFAULT -1,
   `Signal` integer NOT NULL DEFAULT -1,
+  `SignalLevel` integer NOT NULL DEFAULT -1,
   `Sent` int NOT NULL DEFAULT 0,
   `Received` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`IMEI`)
