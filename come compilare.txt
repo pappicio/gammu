@@ -1,5 +1,5 @@
 Anzitutto installa visual studio 2019 (o 2022), seleziona tutta la parte developer per desktop c++ 
-(+ Windows SDK 10 (o 11) + MSVC 140, 141 o 1420) , installa.
+(+ Windows SDK 10 (o 11) + MSVC 140, 141 o 142) , installa.
 
 scarica zip di gammu dal GitHub, e mettilo dove ti pare, (c:\prohrcts\gammu, c:\gammu, dove vuoi, poniamo sia in:
 c:\projects\gammu\ecc.....)
