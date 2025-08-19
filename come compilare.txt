@@ -1,3 +1,4 @@
+SOlo Compialzione Windows (su windows) e 64 bit!
 Anzitutto installa visual studio 2019 (o 2022), seleziona tutta la parte developer per desktop c++ 
 (+ Windows SDK 10 (o 11) + MSVC 140, 141 o 142) , installa.
 
