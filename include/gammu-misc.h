@@ -152,15 +152,28 @@ extern void GSM_InitLocales(const char *path);
 #endif
 #endif
 
+
+
+
+
+
 /* ssize_t for compilers where it does not exist (BCC) */
+#ifndef HAVE_SSIZE_T
+typedef SSIZE_T ssize_t;  // Windows
+#endif
+
+
+
+
+#ifdef _WIN32
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#else
 #ifndef HAVE_SSIZE_T
 typedef long ssize_t;
 #endif
-
-/* intptr_t for compilers where it does not exist (BCC) */
-#ifndef HAVE_INTPTR_T
-typedef int intptr_t;
 #endif
+
 
 /**
  * Encodes text to hexadecimal binary representation.

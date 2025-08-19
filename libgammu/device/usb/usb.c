@@ -8,6 +8,11 @@
  * Licensed under GNU GPL version 2 or later
  */
 
+#define WIN32_LEAN_AND_MEAN   // impedisce a windows.h di includere winsock.h
+#include <winsock2.h>         // DEVE venire PRIMA di windows.h
+#include <windows.h>
+#include <ws2tcpip.h>         // se serve
+
 #include <gammu-config.h>
 
 #include <ctype.h>
@@ -16,6 +21,8 @@
 #ifdef LIBUSB_FOUND
 #include <libusb.h>
 #endif
+ 
+
 
 #include "../../gsmstate.h"
 #if defined(GSM_ENABLE_DKU2PHONET) && defined(GSM_ENABLE_USBDEVICE)
@@ -42,20 +49,37 @@
 /**
  * Union of CDC descriptor.
  */
-struct cdc_union_desc {
-    u_int8_t      bLength;
-    u_int8_t      bDescriptorType;
-    u_int8_t      bDescriptorSubType;
+#include <stdint.h>
 
-    u_int8_t      bMasterInterface0;
-    u_int8_t      bSlaveInterface0;
-} __attribute__ ((packed));
+#ifdef _WIN32
+#pragma pack(push, 1)
+#endif
+
+struct cdc_union_desc {
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubType;
+    uint8_t bMasterInterface0;
+    uint8_t bSlaveInterface0;
+}
+#ifdef __GNUC__
+__attribute__ ((packed))
+#endif
+;
 
 struct cdc_extra_desc {
-    u_int8_t      bLength;
-    u_int8_t      bDescriptorType;
-    u_int8_t      bDescriptorSubType;
-} __attribute__ ((packed));
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubType;
+}
+#ifdef __GNUC__
+__attribute__ ((packed))
+#endif
+;
+
+#ifdef _WIN32
+#pragma pack(pop)
+#endif
 
 /* CDC header types (bDescriptorSubType) */
 #define CDC_HEADER_TYPE         0x00

@@ -1,0 +1,82 @@
+Anzitutto installa visual studio 2019 (o 2022), seleziona tutta la parte developer per desktop c++ 
+(+ Windows SDK 10 (o 11) + MSVC 140, 141 o 1420) , installa.
+
+scarica zip di gammu dal GitHub, e mettilo dove ti pare, (c:\prohrcts\gammu, c:\gammu, dove vuoi, poniamo sia in:
+c:\projects\gammu\ecc.....)
+
+apri la shell (developer) vs 2019 (o 2022) con tasto cerca windows e scrivi:
+
+"developer Command Prompt for VS 2019 (o 2022)"
+
+eseguilo, dentro la shell scrivi:
+
+
+"C:\project\gammu\come compilare.txt", giusto per darti una idea)
+
+cd\
+cd c:\projects\gammu
+
+(ogni volta che compili, ad ogni modifica devi eliminare la cartella build, con:
+rmdir /s /q "C:\projects\gammu\build"
+
+la ricrei:
+mkdir "C:\projects\gammu\build")
+
+cd build
+
+e da qui compili 
+(le librerie statica ODBC e libusb sono gi acomprese, se vuoi puoi aggiornale compilando o scaricandole)
+(gia compilate per VS 2019/2022)
+
+
+per Visual studio 2019 da developer console:
+
+
+cmake -G "Visual Studio 16 2019" -A x64 ^
+ -DWITH_USB=ON ^
+ -DWITH_BLUETOOTH=ON ^
+ -DWITH_IRDA=ON ^
+ -DWITH_ODBC=ON ^
+ -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
+ -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
+ -DODBC_INCLUDE_DIR="../ODBC/Include" ^
+ -DODBC_LIBRARY="../ODBC/Lib/odbc32.lib" ^
+ -DCMAKE_SYSTEM_VERSION=10.0 ^
+ ..
+
+
+per Visual studio 2022 da developer console:
+
+
+cmake -G "Visual Studio 17 2022" -A x64 ^
+ -DWITH_USB=ON ^
+ -DWITH_BLUETOOTH=ON ^
+ -DWITH_IRDA=ON ^
+ -DWITH_ODBC=ON ^
+ -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
+ -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
+ -DODBC_INCLUDE_DIR="../ODBC/Include" ^
+ -DODBC_LIBRARY="../ODBC/Lib/odbc32.lib" ^
+ -DCMAKE_SYSTEM_VERSION=10.0 ^
+ ..
+
+
+una volta compilato si deve buildare:
+
+compila solo gammu.exe
+
+cmake --build . --config Release --target gammu
+
+compila solo gammu-smsd.exe
+
+cmake --build . --target gammu-smsd --config Release
+
+
+compila tutto, ma proprio tutto!!!
+
+cmake --build . --config Release
+
+
+fatto, trovi exe in ../build/smsd(o gammu)/releases/
+ 
+

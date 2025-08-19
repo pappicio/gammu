@@ -1466,7 +1466,7 @@ GSM_Error SMSDSQL_ReadConfiguration(GSM_SMSDConfig *Config)
 #ifdef ODBC_FOUND
 		Config->db = &SMSDODBC;
 		if (Config->sql == NULL) {
-			SMSD_Log(DEBUG_INFO, Config, "Using generic SQL for ODBC, this might fail. In such case please set SQL configuration option.");
+			SMSD_Log(DEBUG_INFO, Config, "Using generic SQL for ODBC, on Windows Systems no alternatives to use!");
 		}
 #else
 		SMSD_Log(DEBUG_ERROR, Config, "The %s driver was not compiled in!", Config->driver);
@@ -1506,7 +1506,7 @@ GSM_Error SMSDSQL_ReadConfiguration(GSM_SMSDConfig *Config)
 			", ", ESCAPE_FIELD("TimeOut"),
 			", ", ESCAPE_FIELD("Client"),
 			", ", ESCAPE_FIELD("Battery"),
-			", ", ESCAPE_FIELD("Signal"),
+			", ", ESCAPE_FIELD("SignalLevel"),
 			") VALUES (%I, %S, %P, %O, %M, %1, %2, ",
 			SMSDSQL_Now(Config),
 			", ",
@@ -1752,7 +1752,7 @@ GSM_Error SMSDSQL_ReadConfiguration(GSM_SMSDConfig *Config)
 		"UPDATE ", Config->table_phones, " SET ",
 			ESCAPE_FIELD("TimeOut"), "= ", SMSDSQL_NowPlus(Config, 10),
 			", ", ESCAPE_FIELD("Battery"), " = %1"
-			", ", ESCAPE_FIELD("Signal"), " = %2"
+			", ", ESCAPE_FIELD("SignalLevel"), " = %2"
 			", ", ESCAPE_FIELD("NetCode"), " = %O"
 			", ", ESCAPE_FIELD("NetName"), " = %M"
 			" WHERE ", ESCAPE_FIELD("IMEI"), " = %I", NULL) != ERR_NONE) {

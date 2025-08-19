@@ -575,84 +575,101 @@ void CopyLineString(char *dest, const char *src, const GSM_CutLines *lines, int 
 const char *GetOS(void)
 {
 #ifdef WIN32
-	OSVERSIONINFOEX Ver;
-	gboolean		Extended = TRUE;
-#else
-#  ifdef HAVE_SYS_UTSNAME_H
-	struct utsname	Ver;
-#  endif
+    OSVERSIONINFOEX Ver;
+    gboolean Extended = TRUE;
+    static char Buffer[240] = {0x00};
+
+    /* Value was already calculated */
+    if (Buffer[0] != 0) return Buffer;
+
+    memset(&Ver, 0, sizeof(OSVERSIONINFOEX));
+    Ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+    if (!GetVersionEx((OSVERSIONINFO *)&Ver)) {
+        Extended = FALSE;
+        Ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+        if (!GetVersionEx((OSVERSIONINFO *)&Ver)) {
+            snprintf(Buffer, sizeof(Buffer) - 1, "Windows");
+            return Buffer;
+        }
+    }
+
+    /* ----------------- 9x family ------------------ */
+    if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 950) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 95");
+    } else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 1111) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 95 OSR2.x");
+    } else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 10 && Ver.dwBuildNumber == 1998) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 98");
+    } else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 10 && Ver.dwBuildNumber == 2222) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 98 SE");
+    } else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 90 && Ver.dwBuildNumber == 3000) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows ME");
+
+    /* ---------------- NT family ------------------- */
+    } else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 1381) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows NT 4.0");
+    } else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 2195) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 2000");
+    } else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 1 && Ver.dwBuildNumber == 2600) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows XP");
+#if _MSC_VER > 1200
+        if (Extended) {
+            if (Ver.wSuiteMask & VER_SUITE_PERSONAL)
+                snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - 1 - strlen(Buffer), " Home");
+            else
+                snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - 1 - strlen(Buffer), " Pro");
+        }
 #endif
-	static char 	Buffer[240] = {0x00};
+    } else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 2) {
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows Server 2003");
+    } else if (Ver.dwMajorVersion == 6 && Ver.dwMinorVersion == 0) {
+        if (Ver.wProductType == VER_NT_WORKSTATION)
+            snprintf(Buffer, sizeof(Buffer) - 1, "Windows Vista");
+        else
+            snprintf(Buffer, sizeof(Buffer) - 1, "Windows Server 2008");
+    } else if (Ver.dwMajorVersion == 6 && Ver.dwMinorVersion == 1) {
+        if (Ver.wProductType == VER_NT_WORKSTATION)
+            snprintf(Buffer, sizeof(Buffer) - 1, "Windows 7");
+        else
+            snprintf(Buffer, sizeof(Buffer) - 1, "Windows Server 2008 R2");
 
-	/* Value was already calculated */
-	if (Buffer[0] != 0) return Buffer;
+    /* ---------------- Modern Windows ---------------- */
+    } else {
+        HMODULE hMod = GetModuleHandleW(L"ntdll.dll");
+        if (hMod) {
+            typedef LONG(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+            RtlGetVersionPtr fn = (RtlGetVersionPtr)GetProcAddress(hMod, "RtlGetVersion");
+            if (fn) {
+                RTL_OSVERSIONINFOW verInfo = {0};
+                verInfo.dwOSVersionInfoSize = sizeof(verInfo);
+                if (fn(&verInfo) == 0) {
+                    if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 2)
+                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8");
+                    else if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 3)
+                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8.1");
+                    else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber < 22000)
+                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 10");
+                    else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber >= 22000)
+                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 11");
+                    else
+                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u",
+                                 verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
 
-#ifdef WIN32
-	memset(&Ver,0,sizeof(OSVERSIONINFOEX));
-	Ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+                    if (Extended && Ver.wServicePackMajor != 0)
+                        snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
 
-   	if (!GetVersionEx((OSVERSIONINFO *)&Ver)) {
-		Extended 		= FALSE;
-	      	Ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	        if (!GetVersionEx((OSVERSIONINFO *)&Ver)) {
-			snprintf(Buffer, sizeof(Buffer) - 1, "Windows");
-			return Buffer;
-		}
-	}
+                    return Buffer;
+                }
+            }
+        }
+        /* Fallback generale */
+        snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u",
+                 Ver.dwMajorVersion, Ver.dwMinorVersion, Ver.dwBuildNumber);
+        if (Extended && Ver.wServicePackMajor != 0)
+            snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
+    }
 
-	/* ----------------- 9x family ------------------ */
-
-	/* no info about Win95 SP1, Win95 OSR2.1, Win95 OSR2.5.... */
-	if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 950) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 95");
-	} else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 1111) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 95 OSR2.x");
-
-	/* no info about Win98 SP1.... */
-	} else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 10 && Ver.dwBuildNumber == 1998) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 98");
-	} else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 10 && Ver.dwBuildNumber == 2222) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 98 SE");
-
-	} else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 90 && Ver.dwBuildNumber == 3000) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows ME");
-
-	/* ---------------- NT family ------------------- */
-
-	} else if (Ver.dwMajorVersion == 4 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 1381) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows NT 4.0");
-
-	} else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 0 && Ver.dwBuildNumber == 2195) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 2000");
-
-	} else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 1 && Ver.dwBuildNumber == 2600) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows XP");
-#if _MSC_VER > 1200 /* 6.0 has it undeclared */
-		if (Extended) {
-			if (Ver.wSuiteMask & VER_SUITE_PERSONAL) {
-				snprintf(Buffer+strlen(Buffer), sizeof(Buffer) - 1 - strlen(Buffer)," Home");
-			} else {
-				snprintf(Buffer+strlen(Buffer), sizeof(Buffer) - 1 - strlen(Buffer)," Pro");
-			}
-		}
-#endif
-
-	} else if (Ver.dwMajorVersion == 5 && Ver.dwMinorVersion == 2) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows 2003");
-
-	} else if (Ver.dwMajorVersion == 6 && Ver.dwMinorVersion == 0) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows Vista");
-
-	} else if (Ver.dwMajorVersion == 6 && Ver.dwMinorVersion > 0) {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows Server 2007");
-
-	} else {
-		snprintf(Buffer, sizeof(Buffer) - 1, "Windows %i.%i.%i",(int)Ver.dwMajorVersion,(int)Ver.dwMinorVersion,(int)Ver.dwBuildNumber);
-	}
-
-	if (Extended && Ver.wServicePackMajor != 0) {
-		snprintf(Buffer+strlen(Buffer), sizeof(Buffer) - 1 - strlen(Buffer)," SP%i",Ver.wServicePackMajor);
-	}
 #elif defined(HAVE_SYS_UTSNAME_H)
 	uname(&Ver);
 	snprintf(Buffer, sizeof(Buffer) - 1, "%s, kernel %s (%s)", Ver.sysname, Ver.release, Ver.version);

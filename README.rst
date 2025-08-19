@@ -1,3 +1,7 @@
+##### per compilare da VS 2019 IDE, leggere il file "come compilare.txt" presente qui. #####
+
+
+
 Gammu All Mobile Management Utilities
 =====================================
 
