@@ -1,4 +1,4 @@
-##### per compilare da VS 2019/2022 (da developer console e poi anche da VS IDE), leggere il file "come compilare.txt" presente qui. #####
+##### per compilare da VS 2019/2022 (Windows 64bit) (da developer console e poi anche da VS IDE), leggere il file "come compilare.txt" presente qui. #####
 
 
 
