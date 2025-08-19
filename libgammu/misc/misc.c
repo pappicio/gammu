@@ -634,41 +634,41 @@ const char *GetOS(void)
         else
             snprintf(Buffer, sizeof(Buffer) - 1, "Windows Server 2008 R2");
 
-    /* ---------------- Modern Windows ---------------- */
-    } else {
-        HMODULE hMod = GetModuleHandleW(L"ntdll.dll");
-        if (hMod) {
-            typedef LONG(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
-            RtlGetVersionPtr fn = (RtlGetVersionPtr)GetProcAddress(hMod, "RtlGetVersion");
-            if (fn) {
-                RTL_OSVERSIONINFOW verInfo = {0};
-                verInfo.dwOSVersionInfoSize = sizeof(verInfo);
-                if (fn(&verInfo) == 0) {
-                    if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 2)
-                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8");
-                    else if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 3)
-                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8.1");
-                    else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber < 22000)
-                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 10");
-                    else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber >= 22000)
-                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows 11");
-                    else
-                        snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u",
-                                 verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
+   } else {
+    HMODULE hMod = GetModuleHandleW(L"ntdll.dll");
+    if (hMod) {
+        typedef LONG(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+        RtlGetVersionPtr fn = (RtlGetVersionPtr)GetProcAddress(hMod, "RtlGetVersion");
+        if (fn) {
+            RTL_OSVERSIONINFOW verInfo = {0};
+            verInfo.dwOSVersionInfoSize = sizeof(verInfo);
+            if (fn(&verInfo) == 0) {
+                if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 2)
+                    snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8 (%u)", verInfo.dwBuildNumber);
+                else if (verInfo.dwMajorVersion == 6 && verInfo.dwMinorVersion == 3)
+                    snprintf(Buffer, sizeof(Buffer) - 1, "Windows 8.1 (%u)", verInfo.dwBuildNumber);
+                else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber < 22000)
+                    snprintf(Buffer, sizeof(Buffer) - 1, "Windows 10 (%u)", verInfo.dwBuildNumber);
+                else if (verInfo.dwMajorVersion == 10 && verInfo.dwBuildNumber >= 22000)
+                    snprintf(Buffer, sizeof(Buffer) - 1, "Windows 11 (%u)", verInfo.dwBuildNumber);
+                else
+                    snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u", 
+                             verInfo.dwMajorVersion, verInfo.dwMinorVersion, verInfo.dwBuildNumber);
 
-                    if (Extended && Ver.wServicePackMajor != 0)
-                        snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
+                if (Extended && Ver.wServicePackMajor != 0)
+                    snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
 
-                    return Buffer;
-                }
+                return Buffer;
             }
         }
-        /* Fallback generale */
-        snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u",
-                 Ver.dwMajorVersion, Ver.dwMinorVersion, Ver.dwBuildNumber);
-        if (Extended && Ver.wServicePackMajor != 0)
-            snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
     }
+    /* Fallback generale */
+    snprintf(Buffer, sizeof(Buffer) - 1, "Windows %u.%u.%u",
+             Ver.dwMajorVersion, Ver.dwMinorVersion, Ver.dwBuildNumber);
+    if (Extended && Ver.wServicePackMajor != 0)
+        snprintf(Buffer + strlen(Buffer), sizeof(Buffer) - strlen(Buffer), " SP%i", Ver.wServicePackMajor);
+}
+
 
 #elif defined(HAVE_SYS_UTSNAME_H)
 	uname(&Ver);
