@@ -50,30 +50,28 @@ per Visual studio 2019 da developer console:
 
 
 cmake -G "Visual Studio 16 2019" -A x64 ^
- -DWITH_USB=ON ^
- -DWITH_BLUETOOTH=ON ^
- -DWITH_IRDA=ON ^
- -DWITH_ODBC=ON ^
- -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
- -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
- -D CMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
- -DCMAKE_SYSTEM_VERSION=10.0 ^
- ..
+-DWITH_USB=ON ^
+-DWITH_BLUETOOTH=ON ^
+-DWITH_IRDA=ON ^
+-DWITH_ODBC=ON ^
+-DLIBUSB_INCLUDE_DIR="../libusb/include" ^
+-DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
+-DCMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
+-DCMAKE_SYSTEM_VERSION=10.0 ..
 
 
 per Visual studio 2022 da developer console:
 
 
 cmake -G "Visual Studio 17 2022" -A x64 ^
- -DWITH_USB=ON ^
- -DWITH_BLUETOOTH=ON ^
- -DWITH_IRDA=ON ^
- -DWITH_ODBC=ON ^
- -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
- -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
- -D CMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
- -DCMAKE_SYSTEM_VERSION=10.0 ^
- ..
+-DWITH_USB=ON ^
+-DWITH_BLUETOOTH=ON ^
+-DWITH_IRDA=ON ^
+-DWITH_ODBC=ON ^
+-DLIBUSB_INCLUDE_DIR="../libusb/include" ^
+-DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
+-DCMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
+-DCMAKE_SYSTEM_VERSION=10.0 ..
 
 
 una volta compilato si deve buildare:
