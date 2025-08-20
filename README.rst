@@ -1,6 +1,10 @@
 ##### per compilare da VS 2019/2022 (Windows 64bit) (da developer console e poi anche da VS IDE), leggere il file "come compilare.txt" presente qui. #####
 
+## Librerie incluse
 
+- **libusb** (LGPL 2.1)  
+  La libreria è inclusa in `external/libusb/`.  
+  Licenza originale disponibile in /libusb/COPYING`.
 
 Gammu All Mobile Management Utilities
 =====================================
