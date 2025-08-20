@@ -46,8 +46,9 @@ e da qui compili
 (gia compilate per VS 2019/2022)
 
 
-per Visual studio 2019 da developer console:
 
+
+per Visual studio 2019 da developer console:
 
 cmake -G "Visual Studio 16 2019" -A x64 ^
 -DWITH_USB=ON ^
@@ -57,11 +58,13 @@ cmake -G "Visual Studio 16 2019" -A x64 ^
 -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
 -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
 -DCMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
--DCMAKE_SYSTEM_VERSION=10.0 ..
+-DCMAKE_SYSTEM_VERSION=10.0 ^
+-DODBC_LIBRARY="C:/Program Files (x86)/Windows Kits/10/Lib/x64/odbc32.lib" ..
+
+
 
 
 per Visual studio 2022 da developer console:
-
 
 cmake -G "Visual Studio 17 2022" -A x64 ^
 -DWITH_USB=ON ^
@@ -71,7 +74,10 @@ cmake -G "Visual Studio 17 2022" -A x64 ^
 -DLIBUSB_INCLUDE_DIR="../libusb/include" ^
 -DLIBUSB_LIBRARIES="../libusb/lib/libusb-1.0.lib" ^
 -DCMAKE_PREFIX_PATH="C:/Program Files (x86)/Windows Kits/10/Lib" ^
--DCMAKE_SYSTEM_VERSION=10.0 ..
+-DCMAKE_SYSTEM_VERSION=10.0 ^
+-DODBC_LIBRARY="C:/Program Files (x86)/Windows Kits/10/Lib/x64/odbc32.lib" ..
+
+
 
 
 una volta compilato si deve buildare:
