@@ -3,8 +3,8 @@
 ## Librerie incluse
 
 - **libusb** (LGPL 2.1)  
-  La libreria è inclusa in `external/libusb/`.  
-  Licenza originale disponibile in /libusb/COPYING`.
+  La libreria è inclusa in `/libusb/`.  
+  Licenza originale disponibile in '/libusb/COPYING`.
 
 Gammu All Mobile Management Utilities
 =====================================
