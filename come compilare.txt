@@ -12,21 +12,9 @@ La libreria odbc32.lib sarà disponibile automaticamente nella cartella dei Wind
 
 x64: C:\Program Files (x86)\Windows Kits\10\Lib\<versione>\um\x64\odbc32.lib
 
-x86: C:\Program Files (x86)\Windows Kits\10\Lib\<versione>\um\x86\odbc32.lib
-
-
-
-(Opzionale) Se serve specificare il percorso, aggiungi in Linker → Directory delle librerie aggiuntive la cartella corrispondente del Windows SDK.
-
-In CMake:
-Aggiungi al tuo CMakeLists.txt:
-
-target_link_libraries(NomeTuoProgetto PRIVATE odbc32)
-
 
 CMake troverà automaticamente la libreria se il Windows SDK è installato correttamente.
 
-Vuoi che ti prepari anche un esempio di README pronto da copiare su GitHub con queste istruzioni già formattate?
 Anzitutto installa visual studio 2019 (o 2022), seleziona tutta la parte developer per desktop c++ 
 (+ Windows SDK 10 (o 11) + MSVC 140, 141 o 142) , installa.
 
