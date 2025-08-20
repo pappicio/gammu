@@ -4,7 +4,7 @@
 
 - **libusb** (LGPL 2.1)  
   La libreria è inclusa in `/libusb/`.  
-  Licenza originale disponibile in '/libusb/COPYING`.
+  Licenza originale disponibile in '/libusb/COPYING.txt`.
 
 Gammu All Mobile Management Utilities
 =====================================
