@@ -92,5 +92,15 @@ cmake --build . --config Release
 
 
 fatto, trovi exe in ../build/smsd(o gammu)/releases/
- 
+
+se dovete alterare il campo outbox per il prossimo id per sentitems, verificate ultimo id di sentitems + 1
+date quresti comandi db:
+
+SELECT IFNULL(MAX(ID),0)+1 FROM sentitems
+
+(esempio riutlato: 165)
+il risultato dovete metterlo su:
+
+ALTER TABLE outbox AUTO_INCREMENT = 165;
+
 
