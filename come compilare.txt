@@ -104,3 +104,26 @@ il risultato dovete metterlo su:
 ALTER TABLE outbox AUTO_INCREMENT = 165;
 
 
+
+cmake -G "Visual Studio 17 2022" -A x64 ^
+  -DWITH_USB=ON ^
+  -DWITH_BLUETOOTH=ON ^
+  -DWITH_IRDA=ON ^
+  -DWITH_ODBC=ON ^
+  -DLIBUSB_INCLUDE_DIR="C:/projects/gammu/libusb/include" ^
+  -DLIBUSB_LIBRARIES="C:/projects/gammu/libusb/lib/libusb-1.0.lib" ^
+  -DCURL_INCLUDE_DIR="C:/projects/gammu/libcurl/include" ^
+  -DCURL_LIBRARY="C:/projects/gammu/libcurl/lib/libcurl.lib" ^
+  -DCURL_STATICLIB=OFF ^
+  -DCMAKE_C_FLAGS="/DCURL_STATICLIB=0" ^
+  -DCMAKE_CXX_FLAGS="/DCURL_STATICLIB=0" ^
+  -DCMAKE_SYSTEM_VERSION=10.0 ..
+
+
+
+
+cmake --build . --config Release
+
+
+
+
